@@ -43,13 +43,14 @@ echo '>>>>> [PostgreSQL] postgres db 설치(root계정 말고 postgres계정으�
 su - postgres
 /usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data
 
-echo '>>>>> [PostgreSQL] postgres logfile 설정'
-/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile
+echo '>>>>> [PostgreSQL] postgres 시작 (logfile 설정)'
+/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l logfile start
 
 echo '>>>>> [PostgreSQL] postgres.service 설정'
+su - 
 cat >> /etc/systemd/system/postgres.service <<EOF
 [Unit]
-Description=PostgreSQL Database
+Description=PostgreSQL Server
 After=network.target
 
 [Service]
@@ -57,7 +58,7 @@ Type=notify
 User=postgres
 Group=postgres
 LimitNOFILE=65536
-ExecStart=/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data start
+ExecStart=/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /home/postgres/logfile start
 ExecStop=/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data stop
 TimeoutStartSec=900
 TimeoutStopSec=900
@@ -71,6 +72,6 @@ WantedBy=multi-user.target
 EOF
 
 echo '>>>>>  [PostgreSQL] 서비스 실행 및 자동 실행 설정'
-systemctl daemon-reload
-systemctl start postgres
-systemctl enable postgres
+sudo systemctl daemon-reload
+sudo systemctl start postgres
+sudo systemctl enable postgres
