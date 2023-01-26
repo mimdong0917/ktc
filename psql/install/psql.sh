@@ -9,17 +9,16 @@ fi
 __POSTGRESQL_VERSION__=$1
 
 #echo '>>>>> [PostgreSQL] 초기화'
-#sudo killall apt apt-get
-#sudo rm /var/lib/apt/lists/lock
-#sudo rm /var/cache/apt/archives/lock
-#sudo rm /var/lib/dpkg/lock
-#sudo apt -y update
-#sudo apt -y upgrade
-#sudo timedatectl set-timezone Asia/Seoul
+sudo killall apt apt-get
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+sudo sed -i 's/kr.archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
+sudo apt -y update
+sudo timedatectl set-timezone Asia/Seoul
 
 echo '>>>>> [PostgreSQL] 필요 패키지(gcc libreadline-dev zlib-devel) 설치'
-apt-get update -y
-apt-get install gcc libreadline-dev zlib-devel -y
+sudo apt-get install gcc libreadline-dev zlib1g-dev -y
 
 echo ">>>>> [PostgreSQL] postgresql-${__POSTGRESQL_VERSION__}.tar.gz 다운로드 및 압축해제"
 wget https://ftp.postgresql.org/pub/source/v${__POSTGRESQL_VERSION__}/postgresql-${__POSTGRESQL_VERSION__}.tar.gz
